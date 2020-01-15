@@ -47,6 +47,8 @@ public class Game extends BasicGame
 	
 	TrueTypeFont verdana12;
 	TrueTypeFont verdana24;
+	
+	Player player = new Player();
  	
 	@Override
 	public void render(GameContainer container, Graphics graphics) throws SlickException
@@ -60,6 +62,9 @@ public class Game extends BasicGame
 					world[y][x].render(graphics, world, camX, camY, container, mb);
 			}
 		}
+		
+		// Entities
+		player.render(graphics, world);
 		
 		if (inventory)
 		{
@@ -145,10 +150,6 @@ public class Game extends BasicGame
 		
 		if (container.getInput().isKeyDown(Input.KEY_ESCAPE)) System.exit(0);
 		
-		if (container.getInput().isKeyDown(Input.KEY_UP)) camY = camY - 5;
-		if (container.getInput().isKeyDown(Input.KEY_DOWN)) camY = camY + 5;
-		if (container.getInput().isKeyDown(Input.KEY_LEFT)) camX = camX - 5;
-		if (container.getInput().isKeyDown(Input.KEY_RIGHT)) camX = camX + 5;
 		if (container.getInput().isKeyPressed(Input.KEY_TAB))
 		{
 			if (inventory)
@@ -170,26 +171,33 @@ public class Game extends BasicGame
 		if (container.getInput().isKeyDown(Input.KEY_LSHIFT))
 		{
 			attackGui = true;
+			
+			if (container.getInput().isKeyPressed(Input.KEY_W)) {
+				mb.push("<Info> A generic attack.");
+				selectedAttack = 0;
+			}
+			if (container.getInput().isKeyPressed(Input.KEY_D)) {
+				mb.push("<Info> A generic attack.");
+				selectedAttack = 1;
+			}
+			if (container.getInput().isKeyPressed(Input.KEY_S)) {
+				mb.push("<Info> A generic attack.");
+				selectedAttack = 2;
+			}
+			if (container.getInput().isKeyPressed(Input.KEY_A)) {
+				mb.push("<Info> A generic attack.");
+				selectedAttack = 3;
+			}
 		} else {
 			attackGui = false;
+			
+			if (container.getInput().isKeyDown(Input.KEY_W)) camY = camY - 5;
+			if (container.getInput().isKeyDown(Input.KEY_S)) camY = camY + 5;
+			if (container.getInput().isKeyDown(Input.KEY_A)) camX = camX - 5;
+			if (container.getInput().isKeyDown(Input.KEY_D)) camX = camX + 5;
 		}
 		
-		if (container.getInput().isKeyPressed(Input.KEY_W)) {
-			mb.push("<Info> A generic attack.");
-			selectedAttack = 0;
-		}
-		if (container.getInput().isKeyPressed(Input.KEY_D)) {
-			mb.push("<Info> A generic attack.");
-			selectedAttack = 1;
-		}
-		if (container.getInput().isKeyPressed(Input.KEY_S)) {
-			mb.push("<Info> A generic attack.");
-			selectedAttack = 2;
-		}
-		if (container.getInput().isKeyPressed(Input.KEY_A)) {
-			mb.push("<Info> A generic attack.");
-			selectedAttack = 3;
-		}
+		
 	}
 	
 	//

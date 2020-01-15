@@ -101,8 +101,8 @@ public class Game extends BasicGame
 			}
 		}
 		
-		graphics.drawString(player.h_velocity + ", " + player.v_velocity, 10, 10);
-		graphics.drawString(player.getX() + ", " + player.getY(),  10, 20);
+		graphics.drawString("Velocity (x, y): " + player.h_velocity + ", " + player.v_velocity, 10, 10);
+		graphics.drawString("Position (x, y): " + player.getX() + ", " + player.getY(),  10, 25);
 		
 		// Minimap
 		if (showMap)

@@ -68,7 +68,7 @@ public class Player
 	public void parseMovement(GameContainer container, Block[][] world)
 	{
 		// Update our horizontal velocities, to a maximum of then pixels per frame
-		if (container.getInput().isKeyDown(Input.KEY_A)) // Handle left movement
+		if (container.getInput().isKeyDown(Input.KEY_A) && world[((y-(y%32))/32)+16][((x-(x%32))/32)+29].getType().equals("air")) // Handle left movement
 		{
 			// Ensure we can't go into MAXIMUM OVERDRIVE, KRABS (Set an upper limit to our velocity)
 			if (h_velocity >= -3)
@@ -78,14 +78,14 @@ public class Player
 		} else if (h_velocity < 0 && !container.getInput().isKeyDown(Input.KEY_D)) {
 			h_velocity++;
 		}
-		if (container.getInput().isKeyDown(Input.KEY_D))
+		if (container.getInput().isKeyDown(Input.KEY_D) && !container.getInput().isKeyDown(Input.KEY_A) && world[((y-(y%32))/32)+16][((x-(x%32))/32)+31].getType().equals("air"))
 		{
 			if (h_velocity <= 3)
 			{
 				h_velocity++;	
 			}
 			
-		} else if (h_velocity > 0 && !container.getInput().isKeyDown(Input.KEY_A)) {
+		} else if (h_velocity > 0) {
 			h_velocity--;
 		}
 		
@@ -101,7 +101,10 @@ public class Player
 		
 		int x_buffer = ((x-(x%32))/32)+30; // This represents the current X coordinate of the player, use it to check if we're able to fall
 		int y_buffer = ((y-(y%32))/32)+17; // Likewise
-		world[y_buffer][x_buffer].highlighted = true;
+		
+		world[y_buffer][x_buffer].highlighted = true; // Bottom
+		world[((y-(y%32))/32)+16][((x-(x%32))/32)+31].highlighted = true;
+		world[((y-(y%32))/32)+16][((x-(x%32))/32)+29].highlighted = true;
 		if (world[y_buffer][x_buffer].getType().equals("air")) // Eventually this needs to be a check if the bottom hitbox intersects a block
 		{
 			if (!limitVelocity)

@@ -47,7 +47,9 @@ public class Player
 		graphics.draw(left_hitbox);
 		graphics.draw(right_hitbox);
 		
-		//int x_buffer = ((x+16-(x%32))/32)+30; // This represents the current X coordinate of the player
+		int x_buffer = ((x-(x%32))/32)+30; // This represents the current X coordinate of the player, use it to check if we're able to fall
+		int y_buffer = ((y-(y%32))/32)+16; // Likewise
+		world[y_buffer+1][x_buffer].highlighted = true;
 	}
 	
 	// Logic

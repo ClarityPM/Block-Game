@@ -9,7 +9,7 @@ import org.newdawn.slick.geom.Rectangle;
 public class Player
 {
 	int x = 0;
-	int y = 1000;
+	int y = 800;
 
 	Rectangle top_hitbox;
 	Rectangle right_hitbox;
@@ -19,6 +19,7 @@ public class Player
 	// Horizontal and vertical velocities
 	int h_velocity = 0 ;
 	int v_velocity = 0;
+	boolean limitVelocity = false;
 	
 	// Class representing the player's stats and hitbox
 	public Player()
@@ -46,16 +47,12 @@ public class Player
 		graphics.draw(bottom_hitbox);
 		graphics.draw(left_hitbox);
 		graphics.draw(right_hitbox);
-		
-		int x_buffer = ((x-(x%32))/32)+30; // This represents the current X coordinate of the player, use it to check if we're able to fall
-		int y_buffer = ((y-(y%32))/32)+16; // Likewise
-		world[y_buffer+1][x_buffer].highlighted = true;
 	}
 	
 	// Logic
-	public void update(GameContainer container)
+	public void update(GameContainer container, Block[][] world)
 	{
-		parseMovement(container);
+		parseMovement(container, world);
 	}
 	
 	public int getX()
@@ -68,7 +65,7 @@ public class Player
 		return y;
 	}
 	
-	public void parseMovement(GameContainer container)
+	public void parseMovement(GameContainer container, Block[][] world)
 	{
 		// Update our horizontal velocities, to a maximum of then pixels per frame
 		if (container.getInput().isKeyDown(Input.KEY_A)) // Handle left movement
@@ -92,22 +89,34 @@ public class Player
 			h_velocity--;
 		}
 		
-		x = x + h_velocity;
+		x = x + h_velocity; // Apply movement
 		
 		// Handle vertical velocity changes such as jumping and falling
 		if (container.getInput().isKeyPressed(Input.KEY_W))
 		{
-			v_velocity = -12;
+			y = y - 10;
+			v_velocity = -20;
 		}
 		if (v_velocity < 0) v_velocity++;
 		
-		// Handle falling, for now we fall when S is pressed, like the horizontal movement but with no upper bound...
-		if (container.getInput().isKeyDown(Input.KEY_S)) // Eventually this needs to be a check if the bottom hitbox intersects a block
+		int x_buffer = ((x-(x%32))/32)+30; // This represents the current X coordinate of the player, use it to check if we're able to fall
+		int y_buffer = ((y-(y%32))/32)+17; // Likewise
+		world[y_buffer][x_buffer].highlighted = true;
+		if (world[y_buffer][x_buffer].getType().equals("air")) // Eventually this needs to be a check if the bottom hitbox intersects a block
 		{
-			v_velocity++;
+			if (!limitVelocity)
+			{
+				v_velocity++;
+				limitVelocity = true;
+			} else {
+				limitVelocity = false;
+			}
+			
+		} else {
+			v_velocity = 0;
 		}
 		
-		y = y + v_velocity;
+		y = y + v_velocity; // Apply movement
 		
 	}
 }

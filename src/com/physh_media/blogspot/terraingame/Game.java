@@ -135,7 +135,7 @@ public class Game extends BasicGame
 		
 		mb = new MessageBlock(Color.white, verdana24);
 		
-		mb.push("Version: 0.2 beta CANARY");
+		mb.push("Version: 0.2 alpha CANARY");
 		
 		generate();
 	}
@@ -203,7 +203,7 @@ public class Game extends BasicGame
 		} else {
 			attackGui = false;
 			
-			player.parseMovement(container);
+			player.parseMovement(container, world);
 			
 			if (container.getInput().isKeyDown(Input.KEY_W)) camY = camY - 5;
 			if (container.getInput().isKeyDown(Input.KEY_S)) camY = camY + 5;
@@ -304,8 +304,6 @@ public class Game extends BasicGame
 			tree_buffer.add(getGrassBlock());
 			new TreeSmall().generate(tree_buffer.get(i)[0]-3, tree_buffer.get(i)[1]-8, world);
 		}
-		
-		//new Tower().generate(5, 20, world);
 		
 		mb.push("Generation took " + (System.currentTimeMillis()-start) + " ms");
 	}

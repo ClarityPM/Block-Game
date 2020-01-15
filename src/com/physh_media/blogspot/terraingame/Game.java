@@ -1,50 +1,48 @@
 package com.physh_media.blogspot.terraingame;
 
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 
-import com.physh_media.blogspot.terraingame.structure.Tower;
 import com.physh_media.blogspot.terraingame.structure.TreeSmall;
 
 public class Game extends BasicGame
 {
 	public Game(String title) {super(title);}
 
+	// Generation variables
+	float[][] heightmap = new float[100][1000];
 	Block[][] world = new Block[100][1000];
-	
-	Random random = new Random();
+	FastNoise fn = new FastNoise();	
 	
 	int camX = 0;
 	int camY = 1000;
 	
+	// Inventory variables
 	boolean inventory = false;
 	Color guiColor = new Color(200,200,200,150);
 	
 	boolean attackGui = false;
 	int selectedAttack = 0;
-	
-	int goffset_x, goffset_y, remainder_x, remainder_y, mouse_x, mouse_y;
+	String replace_type = "stone";
 	
 	int min_visible, max_visible;
 	
 	MessageBlock mb;
 	
-	float[][] heightmap = new float[100][1000];
-	FastNoise fn = new FastNoise();
-	
-	Image paralaxBackground;
+	Random random = new Random();
 	
 	boolean showMap = false;
 	
+	// Fonts
 	TrueTypeFont verdana12;
 	TrueTypeFont verdana24;
 	
@@ -59,7 +57,7 @@ public class Game extends BasicGame
 			for (int x = 0; x < 1000; x++)
 			{
 				if (x >= min_visible && x <= max_visible)
-					world[y][x].render(graphics, world, camX, camY, container, mb);
+					world[y][x].render(graphics, world, player.getX(), player.getY(), container, replace_type);
 			}
 		}
 		
@@ -103,6 +101,8 @@ public class Game extends BasicGame
 			}
 		}
 		
+		graphics.drawString(player.h_velocity + ", " + player.v_velocity, 10, 10);
+		graphics.drawString(player.getX() + ", " + player.getY(),  10, 20);
 		
 		// Minimap
 		if (showMap)
@@ -119,7 +119,7 @@ public class Game extends BasicGame
 					} else {
 						graphics.setColor(Color.darkGray);
 					}
-					graphics.fillRect(570+(x*2), 50+(y*2), 2, 2);
+					graphics.fillRect((float) (x*1.5), (float) (y*1.5), (float) 1.5, (float) 1.5);
 				}
 			}
 		}
@@ -129,11 +129,13 @@ public class Game extends BasicGame
 
 	@Override
 	public void init(GameContainer container) throws SlickException
-	{
+	{	
 		verdana12 = new TrueTypeFont(new Font("font/VERDANA.TTF", Font.TRUETYPE_FONT, 12), true);
 		verdana24 = new TrueTypeFont(new Font("font/VERDANA.TTF", Font.TRUETYPE_FONT, 24), true);
 		
 		mb = new MessageBlock(Color.white, verdana24);
+		
+		mb.push("Version: 0.2 beta CANARY");
 		
 		generate();
 	}
@@ -144,9 +146,16 @@ public class Game extends BasicGame
 		// Calculate the visible range
 		// Min = world[y][(cam_x(cam_x%32))/32]
 		// Max = world[y](60+(cam_x(cam_x%32))/32)]
-		min_visible = (camX-(camX%32))/32;
-		max_visible = 60+((camX-(camX%32))/32);
+		min_visible = (player.getX()-(player.getX()%32))/32;
+		max_visible = 60+((player.getX()-(player.getX()%32))/32);
 		
+		for (int i = 0; i < 100; i++)
+		{
+			for (int o = 0; o < 100; o++)
+			{
+				
+			}
+		}
 		
 		if (container.getInput().isKeyDown(Input.KEY_ESCAPE)) System.exit(0);
 		
@@ -173,16 +182,19 @@ public class Game extends BasicGame
 			attackGui = true;
 			
 			if (container.getInput().isKeyPressed(Input.KEY_W)) {
-				mb.push("<Info> A generic attack.");
+				mb.push("<Info> Selected grass.");
 				selectedAttack = 0;
+				replace_type = "grass";
 			}
 			if (container.getInput().isKeyPressed(Input.KEY_D)) {
-				mb.push("<Info> A generic attack.");
+				mb.push("<Info> Selected dirt.");
 				selectedAttack = 1;
+				replace_type = "dirt";
 			}
 			if (container.getInput().isKeyPressed(Input.KEY_S)) {
-				mb.push("<Info> A generic attack.");
+				mb.push("<Info> Selected stone.");
 				selectedAttack = 2;
+				replace_type = "stone";
 			}
 			if (container.getInput().isKeyPressed(Input.KEY_A)) {
 				mb.push("<Info> A generic attack.");
@@ -190,6 +202,8 @@ public class Game extends BasicGame
 			}
 		} else {
 			attackGui = false;
+			
+			player.parseMovement(container);
 			
 			if (container.getInput().isKeyDown(Input.KEY_W)) camY = camY - 5;
 			if (container.getInput().isKeyDown(Input.KEY_S)) camY = camY + 5;
@@ -203,9 +217,9 @@ public class Game extends BasicGame
 	//
 	// Misc. methods
 	//
-	public int[] getGrassBlock()
+	public Integer[] getGrassBlock()
 	{
-		int[] toReturn = {0, 0};
+		Integer[] toReturn = {0, 0};
 		
 		int targetx = random.nextInt(1000);
 		for (int i = 0; i < 100; i++)
@@ -277,11 +291,18 @@ public class Game extends BasicGame
 		}
 		
 		// Put our trees
-		int[] tree_buffer;
+		ArrayList<Integer[]> tree_buffer = new ArrayList<Integer[]>();
 		for (int i  = 0; i < 100; i++)
 		{
-			tree_buffer = getGrassBlock();
-			new TreeSmall().generate(tree_buffer[0]-3, tree_buffer[1]-8, world);
+			// Ensure no duplicate trees
+			Integer[] buffer1 = getGrassBlock();
+			while (tree_buffer.contains(buffer1))
+			{
+				buffer1 = getGrassBlock();
+			}
+			
+			tree_buffer.add(getGrassBlock());
+			new TreeSmall().generate(tree_buffer.get(i)[0]-3, tree_buffer.get(i)[1]-8, world);
 		}
 		
 		//new Tower().generate(5, 20, world);

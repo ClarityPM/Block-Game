@@ -6,6 +6,8 @@ public class Structure
 {
 	String[][] buffer;
 	
+	// A structure represents a set of tiles that can be placed into the world.
+	// Use a child class and override to make new structures.
 	public Structure(int width, int height)
 	{
 		buffer = new String[height][width];

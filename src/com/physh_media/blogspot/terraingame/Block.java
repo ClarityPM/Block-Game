@@ -49,17 +49,22 @@ public class Block
 	
 	int darkModifier;
 	int[] darkBuffer;
-	public void render(Graphics graphics, Block[][] world, int offset_x, int offset_y, GameContainer container, MessageBlock mb)
+	public void render(Graphics graphics, Block[][] world, int offset_x, int offset_y, GameContainer container, String replace_type)
 	{		
-		rect = new Rectangle((x*32)-offset_x, (y*32)-offset_y, 32, 32);
+		// Update our hitbox
+		if (!rect.equals(new Rectangle((x*32)-offset_x, (y*32)-offset_y, 32, 32)))
+		{
+			rect = new Rectangle((x*32)-offset_x, (y*32)-offset_y, 32, 32);
+		}
 		
+		// Check if the box contains the cursor
 		if (rect.contains(container.getInput().getAbsoluteMouseX(), container.getInput().getAbsoluteMouseY())) 
 		{
 			if (container.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) 
 			{
 				setType("air");
 			} else if (container.getInput().isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
-				setType("stone");
+				setType(replace_type);
 			}
 			highlighted = true;
 		}

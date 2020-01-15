@@ -176,5 +176,35 @@ public class Block
 		return rect;
 	}
 	
-	
+	public String doesPlayerIntersect(Player target)
+	{
+		if (target.getHitbox()[0].intersects(rect)) {
+			return "top";
+		} else if (target.getHitbox()[1].intersects(rect)) {
+			return "right";
+		} else if (target.getHitbox()[2].intersects(rect)) {
+			return "bottom";
+		} else if (target.getHitbox()[3].intersects(rect)) {
+			return "left";
+		}
+		return "none";
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

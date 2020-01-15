@@ -64,7 +64,7 @@ public class Game extends BasicGame
 		}
 		
 		// Entities
-		player.render(graphics, world);
+		player.render(graphics, world, camX, camY);
 		
 		if (inventory)
 		{
@@ -236,7 +236,7 @@ public class Game extends BasicGame
 		}
 		
 		fn.SetSeed((int) System.currentTimeMillis()); 
-		fn.SetFrequency((float) 0.025); // For good terrain generation
+		fn.SetFrequency((float) 0.033); // For good terrain generation
 		//fn.SetFrequency((float) 0.99); // For odd terrain
 		
 		// Terrain heightmap
@@ -284,7 +284,7 @@ public class Game extends BasicGame
 			new TreeSmall().generate(tree_buffer[0]-3, tree_buffer[1]-8, world);
 		}
 		
-		new Tower().generate(5, 20, world);
+		//new Tower().generate(5, 20, world);
 		
 		mb.push("Generation took " + (System.currentTimeMillis()-start) + " ms");
 	}

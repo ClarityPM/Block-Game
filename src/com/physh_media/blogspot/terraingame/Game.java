@@ -47,6 +47,8 @@ public class Game extends BasicGame
 	TrueTypeFont verdana24;
 	
 	Player player = new Player();
+	
+	Enemy enemy = new Enemy(100, 1000);
  	
 	@Override
 	public void render(GameContainer container, Graphics graphics) throws SlickException
@@ -63,6 +65,7 @@ public class Game extends BasicGame
 		
 		// Entities
 		player.render(graphics, world, camX, camY);
+		enemy.render(graphics, player.getX(), player.getY());
 		
 		if (inventory)
 		{
@@ -100,6 +103,8 @@ public class Game extends BasicGame
 				graphics.drawRect(660, 440, 200, 200);
 			}
 		}
+		
+		graphics.setColor(Color.white);
 		
 		graphics.drawString("Velocity (x, y): " + player.h_velocity + ", " + player.v_velocity, 10, 10);
 		graphics.drawString("Position (x, y): " + player.getX() + ", " + player.getY(),  10, 25);
@@ -211,7 +216,7 @@ public class Game extends BasicGame
 			if (container.getInput().isKeyDown(Input.KEY_D)) camX = camX + 5;
 		}
 		
-		
+		enemy.update(world, player, mb);
 	}
 	
 	//

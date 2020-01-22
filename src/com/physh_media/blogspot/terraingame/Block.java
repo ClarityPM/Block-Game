@@ -222,6 +222,16 @@ public class Block
 		}
 		return "none";
 	}
+	
+	public boolean isPassable()
+	{
+		if (type.equals("air") || type.equals("leaves") || type.equals("wood"))
+		{
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
 

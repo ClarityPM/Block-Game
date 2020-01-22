@@ -91,7 +91,7 @@ public class Player
 			!container.getInput().isKeyDown(Input.KEY_D)) // Handle left movement
 		{
 			if (//!world[((y-(y%32))/32)+16][((x-(x%32))/32)+29].getHitbox().intersects(left_hitbox) && 
-				passable_blocks.contains(world[((y-(y%32))/32)+16][((x-(x%32))/32)+29].getType()))
+				passable_blocks.contains(world[(y/32)+16][(x/32)+29].getType()))
 			{
 				// Ensure we can't go into MAXIMUM OVERDRIVE, KRABS (Set an upper limit to our velocity)
 				if (h_velocity >= -3)

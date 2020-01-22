@@ -5,8 +5,11 @@ import java.util.Random;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.particles.ParticleEmitter;
+import org.newdawn.slick.particles.ParticleSystem;
 
 public class Block
 {
@@ -23,6 +26,10 @@ public class Block
 	
 	Rectangle rect;
 	Random random = new Random();
+	
+	ParticleSystem particle;
+	ParticleEmitter pm;
+	Image particle_sprite;
 	
 	public Block(int x, int y, String type)
 	{
@@ -45,6 +52,16 @@ public class Block
 		}
 		
 		rect = new Rectangle(x, y, x+32, y+32);
+		
+		if (type.equals("grass")) {
+			particle_sprite = Assets.grassBlock;
+		} else if (type.equals("dirt")) {
+			particle_sprite = Assets.dirtBlock;
+		} else {
+			particle_sprite = Assets.stoneBlock;
+		}
+		
+		particle = new ParticleSystem(particle_sprite, 16);
 	}
 	
 	int darkModifier;
@@ -55,6 +72,7 @@ public class Block
 		if (!rect.equals(new Rectangle((x*32)-offset_x, (y*32)-offset_y, 32, 32)))
 		{
 			rect = new Rectangle((x*32)-offset_x, (y*32)-offset_y, 32, 32);
+			particle.setPosition((x*32)-offset_x, (y*32)-offset_y);
 		}
 		
 		// Check if the box contains the cursor
@@ -62,7 +80,7 @@ public class Block
 		{
 			if (container.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) 
 			{
-				setType("air");
+				breakBlock();
 			} else if (container.getInput().isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
 				setType(replace_type);
 			}
@@ -109,6 +127,7 @@ public class Block
 			
 		}
 		
+		
 		if (!highlighted) {
 			graphics.setColor(color);
 		} else {
@@ -119,6 +138,15 @@ public class Block
 		
 		highlighted = false;
 		
+		graphics.setColor(Color.white);
+		//graphics.draw(rect); // Shows us our world grid
+		
+	}
+	
+	// Handle the breaking of a block
+	public void breakBlock()
+	{
+		setType("air");
 		
 	}
 	

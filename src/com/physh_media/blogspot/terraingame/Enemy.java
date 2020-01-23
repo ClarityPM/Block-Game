@@ -41,7 +41,7 @@ public class Enemy
 	
 	public void update(Block[][] world, Player player, MessageBlock mb)
 	{
-		mb.push("" + Math.abs(x-player.getX()));
+		//mb.push("" + Math.abs(x-player.getX()));
 		if (getDistance(player.getX(), player.getY()) < 200) 
 		{
 			targeted = true;

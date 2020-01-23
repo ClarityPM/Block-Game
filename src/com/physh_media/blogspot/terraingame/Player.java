@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
 
 public class Player
@@ -64,9 +63,9 @@ public class Player
 	}
 	
 	// Logic
-	public void update(GameContainer container, Block[][] world)
+	public void update(GameContainer container, Block[][] world, Integer[] movement)
 	{
-		parseMovement(container, world);
+		parseMovement(container, world, movement);
 		
 		if (world[((y-(y%32))/32)+16][((x-(x%32))/32)+29].getHitbox().intersects(body_hitbox))
 		{
@@ -84,11 +83,11 @@ public class Player
 		return y;
 	}
 	
-	public void parseMovement(GameContainer container, Block[][] world)
+	public void parseMovement(GameContainer container, Block[][] world, Integer[] movement)
 	{
 		// Update our horizontal velocities, to a maximum of then pixels per frame
-		if (container.getInput().isKeyDown(Input.KEY_A) && 
-			!container.getInput().isKeyDown(Input.KEY_D)) // Handle left movement
+		if (container.getInput().isKeyDown(movement[2]) && 
+			!container.getInput().isKeyDown(movement[3])) // Handle left movement
 		{
 			if (//!world[((y-(y%32))/32)+16][((x-(x%32))/32)+29].getHitbox().intersects(left_hitbox) && 
 				passable_blocks.contains(world[(y/32)+16][(x/32)+29].getType()))
@@ -101,12 +100,12 @@ public class Player
 			}
 				
 			
-		} else if (h_velocity < 0 && !container.getInput().isKeyDown(Input.KEY_D)) {
+		} else if (h_velocity < 0 && !container.getInput().isKeyDown(movement[3])) {
 			h_velocity++;
 		}
 		
-		if (container.getInput().isKeyDown(Input.KEY_D) && 
-			!container.getInput().isKeyDown(Input.KEY_A))
+		if (container.getInput().isKeyDown(movement[3]) && 
+			!container.getInput().isKeyDown(movement[2]))
 		{
 			if (//!world[((y-(y%32))/32)+16][((x-(x%32))/32)+31].getHitbox().intersects(right_hitbox) &&
 				passable_blocks.contains(world[((y-(y%32))/32)+16][((x-(x%32))/32)+31].getType()))
@@ -125,7 +124,7 @@ public class Player
 		x = x + h_velocity; // Apply movement
 		
 		// Handle vertical velocity changes such as jumping and falling
-		if (container.getInput().isKeyPressed(Input.KEY_W))
+		if (container.getInput().isKeyPressed(movement[4]))
 		{
 			y = y - 10;
 			v_velocity = -20;
@@ -153,6 +152,5 @@ public class Player
 		}
 		
 		y = y + v_velocity; // Apply movement
-		
 	}
 }

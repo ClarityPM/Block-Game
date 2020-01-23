@@ -42,6 +42,12 @@ public class Game extends BasicGame
 	
 	boolean showMap = false;
 	
+	int left = Input.KEY_A;
+	int right = Input.KEY_E;
+	int up = Input.KEY_COMMA;
+	int down = Input.KEY_O;
+	int jump = Input.KEY_SPACE;
+	
 	// Fonts
 	TrueTypeFont verdana12;
 	TrueTypeFont verdana24;
@@ -186,34 +192,30 @@ public class Game extends BasicGame
 		{
 			attackGui = true;
 			
-			if (container.getInput().isKeyPressed(Input.KEY_W)) {
+			if (container.getInput().isKeyPressed(up)) {
 				mb.push("<Info> Selected grass.");
 				selectedAttack = 0;
 				replace_type = "grass";
 			}
-			if (container.getInput().isKeyPressed(Input.KEY_D)) {
+			if (container.getInput().isKeyPressed(right)) {
 				mb.push("<Info> Selected dirt.");
 				selectedAttack = 1;
 				replace_type = "dirt";
 			}
-			if (container.getInput().isKeyPressed(Input.KEY_S)) {
+			if (container.getInput().isKeyPressed(down)) {
 				mb.push("<Info> Selected stone.");
 				selectedAttack = 2;
 				replace_type = "stone";
 			}
-			if (container.getInput().isKeyPressed(Input.KEY_A)) {
+			if (container.getInput().isKeyPressed(left)) {
 				mb.push("<Info> A generic attack.");
 				selectedAttack = 3;
 			}
 		} else {
 			attackGui = false;
 			
-			player.parseMovement(container, world);
-			
-			if (container.getInput().isKeyDown(Input.KEY_W)) camY = camY - 5;
-			if (container.getInput().isKeyDown(Input.KEY_S)) camY = camY + 5;
-			if (container.getInput().isKeyDown(Input.KEY_A)) camX = camX - 5;
-			if (container.getInput().isKeyDown(Input.KEY_D)) camX = camX + 5;
+			Integer[] movement = {up, down, left, right, jump};
+			player.parseMovement(container, world, movement);
 		}
 		
 		enemy.update(world, player, mb);

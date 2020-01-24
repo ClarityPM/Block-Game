@@ -37,11 +37,13 @@ public class Enemy
 			graphics.setColor(purple);
 			graphics.draw(targeting_reticle);
 		}
+		
+		graphics.setColor(Color.white);
+		graphics.drawString("" + getDistance(0,0), 10, 40);
 	}
 	
-	public void update(Block[][] world, Player player, MessageBlock mb)
+	public void update(Block[][] world, Player player)
 	{
-		//mb.push("" + Math.abs(x-player.getX()));
 		if (getDistance(player.getX(), player.getY()) < 200) 
 		{
 			targeted = true;
@@ -62,6 +64,6 @@ public class Enemy
 						Math.sqrt (
 							(Math.abs(x-target_x)^2)+(Math.abs(y-target_y)^2)
 						)
-					);
+					)/32;
 	}
 }

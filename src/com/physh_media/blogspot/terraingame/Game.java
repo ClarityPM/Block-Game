@@ -42,6 +42,7 @@ public class Game extends BasicGame
 	
 	boolean showMap = false;
 	
+	boolean dvorak = true;
 	int left = Input.KEY_A;
 	int right = Input.KEY_E;
 	int up = Input.KEY_COMMA;
@@ -160,15 +161,27 @@ public class Game extends BasicGame
 		min_visible = (player.getX()-(player.getX()%32))/32;
 		max_visible = 60+((player.getX()-(player.getX()%32))/32);
 		
-		for (int i = 0; i < 100; i++)
+		if (container.getInput().isKeyDown(Input.KEY_ESCAPE)) System.exit(0);
+		
+		if (container.getInput().isKeyPressed(Input.KEY_K))
 		{
-			for (int o = 0; o < 100; o++)
+			if (dvorak)
 			{
-				
+				dvorak = false;
+				left = Input.KEY_A;
+				right = Input.KEY_D;
+				up = Input.KEY_W;
+				down = Input.KEY_S;
+				mb.push("Switched to QWERTY layout");
+			} else {
+				dvorak = true;
+				left = Input.KEY_A;
+				right = Input.KEY_E;
+				up = Input.KEY_COMMA;
+				down = Input.KEY_O;
+				mb.push("Switched to Dvorak layout");
 			}
 		}
-		
-		if (container.getInput().isKeyDown(Input.KEY_ESCAPE)) System.exit(0);
 		
 		if (container.getInput().isKeyPressed(Input.KEY_TAB))
 		{
@@ -218,7 +231,7 @@ public class Game extends BasicGame
 			player.parseMovement(container, world, movement);
 		}
 		
-		enemy.update(world, player, mb);
+		enemy.update(world, player);
 	}
 	
 	//

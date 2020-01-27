@@ -20,6 +20,7 @@ public class Block
 	String backtype;
 	
 	boolean highlighted;
+	boolean showHitbox = false;
 	
 	Color color;
 	int colorOffset = 0;
@@ -138,8 +139,12 @@ public class Block
 		
 		highlighted = false;
 		
-		graphics.setColor(Color.white);
-		//graphics.draw(rect); // Shows us our world grid
+		if (showHitbox)
+		{
+			graphics.setColor(Color.white);
+			graphics.draw(rect); // Shows us our world grid
+		}
+		
 		
 	}
 	
@@ -230,6 +235,16 @@ public class Block
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+	public void toggleShowHitbox()
+	{
+		if (showHitbox)
+		{
+			showHitbox = false;
+		} else {
+			showHitbox = true;
 		}
 	}
 }

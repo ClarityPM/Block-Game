@@ -72,7 +72,7 @@ public class Game extends BasicGame
 		
 		// Entities
 		player.render(graphics, world, camX, camY);
-		enemy.render(graphics, player.getX(), player.getY());
+		enemy.render(graphics, container, player.getX(), player.getY());
 		
 		if (inventory)
 		{
@@ -229,6 +229,15 @@ public class Game extends BasicGame
 			
 			Integer[] movement = {up, down, left, right, jump};
 			player.parseMovement(container, world, movement);
+		}
+		if (container.getInput().isKeyPressed(Input.KEY_F4))
+		{
+			for (int y = 0; y < 100; y++) {
+				for (int x = 0; x < 1000; x++)
+				{
+					world[y][x].toggleShowHitbox();
+				}
+			}
 		}
 		
 		enemy.update(world, player);

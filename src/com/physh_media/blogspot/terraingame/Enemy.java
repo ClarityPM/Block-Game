@@ -1,6 +1,7 @@
 package com.physh_media.blogspot.terraingame;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
@@ -19,14 +20,20 @@ public class Enemy
 		x = start_x;
 		y = start_y;
 		
-		hitbox = new Rectangle(x-16, y, 32, 64);
+		hitbox = new Rectangle(x, y, 32, 64);
 		targeting_reticle = new Circle(x-16, y, 32);
 	}
 	
-	public void render(Graphics graphics, int camoffset_x, int camoffset_y)
+	public void render(Graphics graphics, GameContainer container ,int camoffset_x, int camoffset_y)
 	{
 		hitbox.setLocation(x-camoffset_x, y-camoffset_y);
+		//hitbox.
 		targeting_reticle.setLocation((x-16)-camoffset_x, y-camoffset_y);
+		
+		if (hitbox.contains(container.getInput().getMouseX(), container.getInput().getMouseX()))
+		{
+			y = y + 2;
+		}
 		
 		graphics.setColor(Color.red);
 		graphics.draw(hitbox);
